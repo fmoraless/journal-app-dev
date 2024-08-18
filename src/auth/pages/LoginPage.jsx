@@ -11,11 +11,28 @@ import React from "react";
 import FingerprintOutlinedIcon from "@mui/icons-material/FingerprintOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { AuthLayout } from "../layout/AuthLayout";
+import { useForm } from "../../hooks";
+import { Google } from "@mui/icons-material";
 
 export const LoginPage = () => {
+  const { email, password, onInputChange } = useForm({
+    email: "fcomorales.sanchez@gmail.com",
+    password: "123456",
+  });
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    console.log({ email, password });
+  };
+
+  const onGoogleSignIn = () => {
+    console.log("Google Sign In");
+  };
+
   return (
     <AuthLayout title="Iniciar Sesión">
-      <form>
+      <form onSubmit={onSubmit}>
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
@@ -23,6 +40,9 @@ export const LoginPage = () => {
               type="email"
               placeholder="correo@google.com"
               fullWidth
+              name="email"
+              onChange={onInputChange}
+              value={email}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -39,6 +59,9 @@ export const LoginPage = () => {
               type="password"
               placeholder="tu contraseña"
               fullWidth
+              name="password"
+              onChange={onInputChange}
+              value={password}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -61,9 +84,20 @@ export const LoginPage = () => {
               alignItems: "center",
             }}
           >
-            <Grid item xs={12}>
-              <Button variant="contained" fullWidth>
+            <Grid item xs={12} sm={6}>
+              <Button type="submit" variant="contained" fullWidth>
                 Acceder
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Button
+                onClick={onGoogleSignIn}
+                type="submit"
+                variant="contained"
+                fullWidth
+              >
+                <Google />
+                <Typography variant="button">Google</Typography>
               </Button>
             </Grid>
           </Grid>
