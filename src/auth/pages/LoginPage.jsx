@@ -13,8 +13,14 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
 import { Google } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import {
+  checkingAuthentication,
+  startGoogleSignIn,
+} from "../../store/auth/thunk";
 
 export const LoginPage = () => {
+  const dispatch = useDispatch();
   const { email, password, onInputChange } = useForm({
     email: "fcomorales.sanchez@gmail.com",
     password: "123456",
@@ -24,10 +30,12 @@ export const LoginPage = () => {
     event.preventDefault();
 
     console.log({ email, password });
+    dispatch(checkingAuthentication());
   };
 
   const onGoogleSignIn = () => {
     console.log("Google Sign In");
+    dispatch(startGoogleSignIn());
   };
 
   return (
