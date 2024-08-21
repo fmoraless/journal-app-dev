@@ -13,18 +13,36 @@ import FingerprintOutlinedIcon from "@mui/icons-material/FingerprintOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 import { AuthLayout } from "../layout/AuthLayout";
+import { useForm } from "../../hooks";
+import { MailOutline } from "@mui/icons-material";
+
+const fromData = {
+  email: "fcomorales.sanchez@gmail.com",
+  password: "123456",
+  displayName: "Francisco Morales",
+};
 
 export const RegisterPage = () => {
+  const { email, password, onInputChange, displayName } = useForm(fromData);
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    console.log({ email, password, displayName });
+  };
+
   return (
     <AuthLayout title="Crear cuenta">
-      <form>
+      <form onSubmit={onSubmit}>
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              label="Nombre"
+              label="Nombre Completo"
               type="text"
-              placeholder="Juan"
+              placeholder="Juan Perez"
               fullWidth
+              name="displayName"
+              value={displayName}
+              onChange={onInputChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -37,30 +55,17 @@ export const RegisterPage = () => {
 
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              label="Apellido paterno"
-              type="text"
-              placeholder="Pérez"
+              label="Correo"
+              type="email"
+              placeholder="juan@perez.com"
               fullWidth
+              name="email"
+              value={email}
+              onChange={onInputChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonOutlineOutlinedIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} sx={{ mt: 2 }}>
-            <TextField
-              label="Rut"
-              type="text"
-              placeholder="88123456-k"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <FingerprintOutlinedIcon />
+                    <MailOutline />
                   </InputAdornment>
                 ),
               }}
@@ -73,6 +78,9 @@ export const RegisterPage = () => {
               type="password"
               placeholder="tu contraseña"
               fullWidth
+              name="password"
+              value={password}
+              onChange={onInputChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -83,7 +91,7 @@ export const RegisterPage = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sx={{ mt: 2 }}>
+          {/* <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               label="Confirmar Contraseña"
               type="password"
@@ -97,7 +105,7 @@ export const RegisterPage = () => {
                 ),
               }}
             />
-          </Grid>
+          </Grid> */}
 
           {/* BOTONES */}
           <Grid
@@ -112,7 +120,7 @@ export const RegisterPage = () => {
             }}
           >
             <Grid item xs={12}>
-              <Button variant="contained" fullWidth>
+              <Button type="submit" variant="contained" fullWidth>
                 Crear cuenta
               </Button>
             </Grid>
