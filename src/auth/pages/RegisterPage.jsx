@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import FingerprintOutlinedIcon from "@mui/icons-material/FingerprintOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -16,18 +16,39 @@ import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
 import { MailOutline } from "@mui/icons-material";
 
-const fromData = {
-  email: "fcomorales.sanchez@gmail.com",
-  password: "123456",
-  displayName: "Francisco Morales",
+const formData = {
+  email: "",
+  password: "",
+  displayName: "",
+};
+
+const formValidations = {
+  email: [(value) => value.includes("@"), "El correo debe contener un @"],
+  password: [
+    (value) => value.length >= 6,
+    "La contraseña debe tener más 6 caracteres",
+  ],
+  displayName: [(value) => value.length >= 1, "El nombre no puede estar vacío"],
 };
 
 export const RegisterPage = () => {
-  const { email, password, onInputChange, displayName } = useForm(fromData);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const {
+    email,
+    password,
+    onInputChange,
+    displayName,
+    formState,
+    isFormValid,
+    emailValid,
+    passwordValid,
+    displayNameValid,
+  } = useForm(formData, formValidations);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log({ email, password, displayName });
+    setFormSubmitted(true);
+    console.log(formState);
   };
 
   return (
@@ -43,6 +64,8 @@ export const RegisterPage = () => {
               name="displayName"
               value={displayName}
               onChange={onInputChange}
+              error={!!displayNameValid && formSubmitted}
+              helperText={displayNameValid}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -62,6 +85,8 @@ export const RegisterPage = () => {
               name="email"
               value={email}
               onChange={onInputChange}
+              error={!!emailValid && formSubmitted}
+              helperText={emailValid}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -81,6 +106,8 @@ export const RegisterPage = () => {
               name="password"
               value={password}
               onChange={onInputChange}
+              error={!!passwordValid && formSubmitted}
+              helperText={passwordValid}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
