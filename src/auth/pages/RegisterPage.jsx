@@ -1,5 +1,6 @@
 import { Link as RouterLink } from "react-router-dom";
 import {
+  Alert,
   Button,
   Grid,
   InputAdornment,
@@ -7,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import FingerprintOutlinedIcon from "@mui/icons-material/FingerprintOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -15,6 +16,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks";
 import { MailOutline } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+
+import { startCreatingUserWithEmailPassword } from "../../store/auth/thunk";
 
 const formData = {
   email: "",
@@ -32,7 +36,15 @@ const formValidations = {
 };
 
 export const RegisterPage = () => {
+  const dispatch = useDispatch();
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const { status, errorMessage } = useSelector((state) => state.auth);
+  const isCheckingAuthentication = useMemo(
+    () => status === "checking",
+    [status]
+  );
+
   const {
     email,
     password,
@@ -48,7 +60,10 @@ export const RegisterPage = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     setFormSubmitted(true);
-    console.log(formState);
+
+    if (!isFormValid) return;
+
+    dispatch(startCreatingUserWithEmailPassword(formState));
   };
 
   return (
@@ -146,8 +161,16 @@ export const RegisterPage = () => {
               alignItems: "center",
             }}
           >
+            <Grid item xs={12} display={errorMessage ? "" : "none"}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Grid>
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" fullWidth>
+              <Button
+                disableElevation={isCheckingAuthentication}
+                type="submit"
+                variant="contained"
+                fullWidth
+              >
                 Crear cuenta
               </Button>
             </Grid>
