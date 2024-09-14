@@ -72,7 +72,7 @@ export const loginWithEmailPassword = async ({ email, password }) => {
       email,
       password
     );
-    const { uid, displayName, email } = resp.user;
+    const { uid, displayName } = resp.user;
 
     return {
       ok: true,

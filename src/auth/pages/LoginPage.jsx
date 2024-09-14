@@ -1,5 +1,6 @@
 import { Link as RouterLink } from "react-router-dom";
 import {
+  Alert,
   Button,
   Grid,
   InputAdornment,
@@ -20,14 +21,24 @@ import {
   startLoginWithEmailPassword,
 } from "../../store/auth/thunk";
 
+const formData = {
+  email: "",
+  password: "",
+};
+
+const formValidations = {
+  email: [(value) => value.includes("@"), "El correo debe contener un @"],
+  password: [
+    (value) => value.length >= 6,
+    "La contraseña debe tener más 6 caracteres",
+  ],
+};
+
 export const LoginPage = () => {
-  const { status } = useSelector((state) => state.auth);
+  const { status, errorMessage } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const { email, password, onInputChange } = useForm({
-    email: "fcomorales.sanchez@gmail.com",
-    password: "123456",
-  });
+  const { email, password, onInputChange } = useForm(formData, formValidations);
 
   const isAuthenticating = useMemo(() => status === "checking", [status]);
 
@@ -88,6 +99,14 @@ export const LoginPage = () => {
                 ),
               }}
             />
+          </Grid>
+
+          <Grid container display={errorMessage ? "" : "none"} sx={{ mt: 1 }}>
+            <Grid item xs={12} sx={{ mt: 2 }}>
+              {status === "error" && (
+                <Alert severity="error">{errorMessage}</Alert>
+              )}
+            </Grid>
           </Grid>
 
           {/* BOTONES */}
