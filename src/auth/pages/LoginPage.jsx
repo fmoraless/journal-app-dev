@@ -17,11 +17,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   checkingAuthentication,
   startGoogleSignIn,
+  startLoginWithEmailPassword,
 } from "../../store/auth/thunk";
 
 export const LoginPage = () => {
   const { status } = useSelector((state) => state.auth);
-  console.log(status);
+
   const dispatch = useDispatch();
   const { email, password, onInputChange } = useForm({
     email: "fcomorales.sanchez@gmail.com",
@@ -29,13 +30,17 @@ export const LoginPage = () => {
   });
 
   const isAuthenticating = useMemo(() => status === "checking", [status]);
-  console.log({ isAuthenticating: isAuthenticating });
 
   const onSubmit = (event) => {
     event.preventDefault();
 
     console.log({ email, password });
-    dispatch(checkingAuthentication());
+    dispatch(
+      startLoginWithEmailPassword({
+        email,
+        password,
+      })
+    );
   };
 
   const onGoogleSignIn = () => {
